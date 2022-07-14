@@ -4,19 +4,38 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import blogServices from './services/blogService'
 import Notification from './components/Notification'
+import "./App.css"
+import BlogNotification from './BlogNotification'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [newBlogs, setNewBlogs] = useState('new blog ...')
+  const [blogs, setBlogs] = useState([
+
+    {
+      title: 'Things I don\'t know as of 2018', author: 'Dan Abramov', url: ''
+    },
+    {
+      title: 'Microservices and the First Law of Distributed Objects ', author: 'Martin Fowler', url: ''
+
+    }
+  ])
+  // const [newBlogs, setNewBlogs] = useState([
+  // ])
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newTitle, setNewTitle] = useState('')
+  const [newUrl, setNewUrl] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [blogMessage, setBlogMessage] = useState(null)
+
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
     )
+    const token = localStorage.getItem('loggedBlogappUser')
+    setUser(token)
   }, [])
 
 
@@ -28,31 +47,41 @@ const App = () => {
         username, password
       })
 
-      // window.localStorage.setItem(
-      //   'loggedBlogappUser', JSON.stringify(user)
-      // )
+      window.localStorage.setItem(
+        'loggedBlogappUser', JSON.stringify(user.token)
+      )
       blogServices.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
     } catch (exception) {
-      setErrorMessage('wrong credentials')
+      setErrorMessage('wrong username or password')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
     }
+    setUsername('')
+    setPassword('')
   }
 
 
   const addBlog = (event) => {
     event.preventDefault()
-    setNewBlogs(blogs.concat(newBlogs))
-    setNewBlogs('')
+    setBlogs(blogs.concat({
+      title: newTitle,
+      author: newAuthor
+    }))
+    setBlogMessage(`a new blog ${newTitle} has been added`)
+    setTimeout(() => {
+      setBlogMessage(null)
+    }, 5000)
+    setNewTitle('')
+    setNewAuthor('')
+    setNewUrl('')
   }
 
 
   const loginForm = () => {
-    <form onSubmit={handleLogin}>
+    return <form onSubmit={handleLogin}>
+      <h2>Log in to application</h2>
       <div>
         username
         <input type="text"
@@ -74,38 +103,42 @@ const App = () => {
     </form>
   }
   const blogForm = () => {
-    <form onSubmit={addBlog}>
+    return <form onSubmit={addBlog}>
+      <h2>blogs</h2>
 
-      <input
-        onChange={(e) => setNewBlogs(e.target.value)}
-        value={newBlogs}
-      />
-      <button type='submit'>save</button>
+      title: <input
+        onChange={(e) => setNewTitle(e.target.value)}
+        value={newTitle}
+      /><br />
+
+      author: <input
+        onChange={(e) => setNewAuthor(e.target.value)}
+        value={newAuthor}
+      /><br />
+      url: <input
+        onChange={(e) => setNewUrl(e.target.value)}
+        value={newUrl}
+      /><br />
+      <button type='submit'>create</button>
     </form>
   }
-  // if (user === null) {
-  //   return (
-  //     <div>
-  //       <form>
-
-  //       </form>
-  //     </div>
-  //   )
-  // }
-
 
   return (
     <div>
-      <h2>blogs</h2>
       <Notification message={errorMessage} />
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-      {user === null
+      {!user
         ? loginForm()
         : <div>
-          <p>{user.name} logged in</p>
+          <BlogNotification message={blogMessage} />
+          <p>{user.name} logged in <button onClick={() => {
+            localStorage.clear()
+            setUser(null)
+          }}>logout</button></p>
+          <h2>create new</h2>
           {blogForm()}
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} />
+          )}
         </div>}
     </div >
   )
