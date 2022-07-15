@@ -81,7 +81,7 @@ const App = () => {
 
   const loginForm = () => {
     return <form onSubmit={handleLogin}>
-      <h2>Log in to application</h2>
+      <h1>Log in to application</h1>
       <div>
         username
         <input type="text"
@@ -104,12 +104,12 @@ const App = () => {
   }
   const blogForm = () => {
     return <form onSubmit={addBlog}>
-      <h2>blogs</h2>
 
       title: <input
         onChange={(e) => setNewTitle(e.target.value)}
         value={newTitle}
       /><br />
+      <h2>blogs</h2>
 
       author: <input
         onChange={(e) => setNewAuthor(e.target.value)}
