@@ -6,6 +6,8 @@ import blogServices from './services/blogService'
 import Notification from './components/Notification'
 import "./App.css"
 import BlogNotification from './BlogNotification'
+// import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([
@@ -18,16 +20,12 @@ const App = () => {
 
     }
   ])
-  // const [newBlogs, setNewBlogs] = useState([
-  // ])
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newTitle, setNewTitle] = useState('')
-  const [newUrl, setNewUrl] = useState('')
+
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [blogMessage, setBlogMessage] = useState(null)
+
 
 
   useEffect(() => {
@@ -63,20 +61,6 @@ const App = () => {
   }
 
 
-  const addBlog = (event) => {
-    event.preventDefault()
-    setBlogs(blogs.concat({
-      title: newTitle,
-      author: newAuthor
-    }))
-    setBlogMessage(`a new blog ${newTitle} has been added`)
-    setTimeout(() => {
-      setBlogMessage(null)
-    }, 5000)
-    setNewTitle('')
-    setNewAuthor('')
-    setNewUrl('')
-  }
 
 
   const loginForm = () => {
@@ -102,42 +86,27 @@ const App = () => {
       <button type="submit">login</button>
     </form>
   }
-  const blogForm = () => {
-    return <form onSubmit={addBlog}>
 
-      title: <input
-        onChange={(e) => setNewTitle(e.target.value)}
-        value={newTitle}
-      /><br />
-      <h2>blogs</h2>
 
-      author: <input
-        onChange={(e) => setNewAuthor(e.target.value)}
-        value={newAuthor}
-      /><br />
-      url: <input
-        onChange={(e) => setNewUrl(e.target.value)}
-        value={newUrl}
-      /><br />
-      <button type='submit'>create</button>
-    </form>
-  }
+
+
 
   return (
     <div>
       <Notification message={errorMessage} />
+
+
       {!user
         ? loginForm()
         : <div>
-          <BlogNotification message={blogMessage} />
           <p>{user.name} logged in <button onClick={() => {
             localStorage.clear()
             setUser(null)
           }}>logout</button></p>
           <h2>create new</h2>
-          {blogForm()}
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+          <BlogForm setBlogs={setBlogs} blogs={blogs} />
+          {blogs.map((blog, index) =>
+            <Blog key={`blog_${index}`} blog={blog} />
           )}
         </div>}
     </div >

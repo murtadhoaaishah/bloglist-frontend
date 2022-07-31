@@ -2,7 +2,6 @@ import React from 'react'
 
 const LoginForm = (props) => {
     return (
-        // <form onSubmit={handleLogin}>
         <form onSubmit={props.handleSubmit}>
             <h2>Log in to application</h2>
             <div>
@@ -10,7 +9,6 @@ const LoginForm = (props) => {
                 <input type="text"
                     value={props.username}
                     name="username"
-                    // onChange={({ target }) => setUsername(target.value)}
                     onChange={props.handleUsernameChange}
                 />
             </div>
@@ -20,7 +18,6 @@ const LoginForm = (props) => {
                 <input type="password"
                     value={props.password}
                     name="password"
-                    // onChange={({ target }) => setPassword(target.value)}
                     onChange={props.handlePasswordChange}
 
                 />
