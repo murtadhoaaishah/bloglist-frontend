@@ -6,17 +6,16 @@ import blogServices from './services/blogService'
 import Notification from './components/Notification'
 import "./App.css"
 import BlogNotification from './BlogNotification'
-// import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([
 
     {
-      title: 'Things I don\'t know as of 2018', author: 'Dan Abramov', url: ''
+      title: 'Things I don\'t know as of 2018', author: 'Dan Abramov', url: 'https//danabramov', like: 5
     },
     {
-      title: 'Microservices and the First Law of Distributed Objects ', author: 'Martin Fowler', url: ''
+      title: 'Microservices and the First Law of Distributed Objects ', author: 'Martin Fowler', url: 'https//martinfowler', like: 3
 
     }
   ])
@@ -107,7 +106,7 @@ const App = () => {
           <BlogForm setBlogs={setBlogs} blogs={blogs} />
           {blogs.map((blog, index) =>
             <Blog key={`blog_${index}`} blog={blog} />
-          )}
+          ).sort((a, b) => a.like - b.like)}
         </div>}
     </div >
   )

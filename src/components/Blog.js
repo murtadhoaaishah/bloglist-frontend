@@ -18,14 +18,18 @@ const Blog = ({ blog }) => {
   const hide = { display: showDetails ? '' : 'none' }
 
   return (
-    <div style={show}>
+    < div style={blogStyle} >
+      <div style={show}>
 
-      < div style={blogStyle} >
         <p>{blog.title}  <button onClick={() => setShowDetails(true)}>view</button></p>
-        <p>{blog.url}</p>
-        <p>Likes {like} <button onClick={() => setLike(like++)}>like</button></p>
-        <p>{blog.author}</p>
       </div >
+      <div style={hide}>
+        <p>{blog.title}</p>
+        <p>{blog.url}</p>
+        <p>Likes {like} <button onClick={() => setLike(like + 1)}>like</button></p>
+        <p>{blog.author} <button onClick={() => setShowDetails(false)}>hide</button></p>
+      </div>
+      <button>remove</button>
     </div>
 
   )
